@@ -2,6 +2,8 @@ package org.wingsico.bookstore.service.impl;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.wingsico.bookstore.domain.Book;
 import org.wingsico.bookstore.domain.repo.BookRepo;
@@ -21,7 +23,13 @@ public class BookServiceImpl implements BookService {
     BookRepo bookRepo;
 
     @Override
+<<<<<<< HEAD
     public List<Book> findAll() { return bookRepo.findAll(); }
+=======
+    public Page<Book> findAll(Pageable pageable) {
+        return bookRepo.findAll(pageable);
+    }
+>>>>>>> af6529751584b036a898394a5865363746121212
 
     @Override
     public Book insertByBook(Book book) {

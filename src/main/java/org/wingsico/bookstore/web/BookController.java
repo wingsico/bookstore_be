@@ -1,8 +1,9 @@
 package org.wingsico.bookstore.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.wingsico.bookstore.service.BookService;
 import org.wingsico.bookstore.domain.Book;
@@ -26,8 +27,13 @@ public class BookController {
      * 处理 "/book" 的 GET 请求，用来获取 Book 列表
      */
     @GetMapping(value = {"", "/"})
-    public List<Book> getBookList(ModelMap map) {
-        return bookService.findAll();
+    public List<Book> getBookList(
+            @RequestParam(name = "page", defaultValue = "1") Integer page,
+            @RequestParam(name = "size", defaultValue = "10") Integer size
+    ) {
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return bookService.findAll(pageable).getContent();
     }
 
 

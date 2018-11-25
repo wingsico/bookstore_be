@@ -1,5 +1,7 @@
 package org.wingsico.bookstore.domain;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -10,109 +12,36 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name="books")
+@Data
 public class Book implements Serializable {
-
-    /**
-     * 编号
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(unique = true)
     private int id;
 
-    /**
-     * 书名
-     */
-    private String title;
-
-    /**
-     * 作者
-     */
-    private String author;
-
-    /**
-     * 内容
-     */
-    private String content;
-
+    @Column(nullable = false)
     private int classification;
 
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private String author;
+
+    @Column(nullable = false)
+    private String content;
+
+
+
+    @Column(nullable = false)
     private String cover_url;
 
+    @Column(nullable = false)
     private Timestamp publish_date;
 
+    @Column(nullable = false)
     private String author_intro;
 
+    @Column(nullable = false)
     private Float price;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public int getClassification() {
-        return classification;
-    }
-
-    public void setClassification(int classification) {
-        this.classification = classification;
-    }
-
-    public String getCover_url() {
-        return cover_url;
-    }
-
-    public void setCover_url(String cover_url) {
-        this.cover_url = cover_url;
-    }
-
-    public Timestamp getPublish_date() {
-        return publish_date;
-    }
-
-    public void setPublish_date(Timestamp publish_date) {
-        this.publish_date = publish_date;
-    }
-
-    public String getAuthor_intro() {
-        return author_intro;
-    }
-
-    public void setAuthor_intro(String author_intro) {
-        this.author_intro = author_intro;
-    }
-
-    public Float getPrice() {
-        return price;
-    }
-
-    public void setPrice(Float price) {
-        this.price = price;
-    }
 }
