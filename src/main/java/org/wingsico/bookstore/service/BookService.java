@@ -1,5 +1,7 @@
 package org.wingsico.bookstore.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.wingsico.bookstore.domain.Book;
 
 import java.util.List;
@@ -8,7 +10,7 @@ public interface BookService {
     /**
      * 获取所有 Book
      */
-    List<Book> findAll();
+    Page<Book> findAll(Pageable page);
 
     /**
      * 新增 Book
