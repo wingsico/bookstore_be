@@ -31,8 +31,6 @@ public class Book implements Serializable {
     @Column(nullable = false)
     private String content;
 
-
-
     @Column(nullable = false)
     private String cover_url;
 
@@ -44,4 +42,7 @@ public class Book implements Serializable {
 
     @Column(nullable = false)
     private Float price;
+
+    @Column(nullable = false)
+    private String press;
 }

@@ -23,33 +23,22 @@ public class BookServiceImpl implements BookService {
     BookRepo bookRepo;
 
     @Override
-<<<<<<< HEAD
-    public List<Book> findAll() { return bookRepo.findAll(); }
-=======
     public Page<Book> findAll(Pageable pageable) {
         return bookRepo.findAll(pageable);
     }
->>>>>>> af6529751584b036a898394a5865363746121212
 
     @Override
-    public Book insertByBook(Book book) {
-        return bookRepo.save(book);
+    public void addBook(Book book){
+        bookRepo.save(book);
     }
 
     @Override
-    public Book update(Book book) {
-        return bookRepo.save(book);
-    }
-
-    @Override
-    public Book delete(int id) {
-        Book book = bookRepo.findById(id).get();
+    public void deleteBook(Book book){
         bookRepo.delete(book);
-        return book;
     }
 
     @Override
-    public Book findById(int id) {
-        return bookRepo.findById(id).get();
+    public void updataBook(Book book){
+        bookRepo.save(book);
     }
 }

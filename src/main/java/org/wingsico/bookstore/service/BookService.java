@@ -10,33 +10,20 @@ public interface BookService {
     /**
      * 获取所有 Book
      */
-    Page<Book> findAll(Pageable page);
+    Page<Book> findAll(Pageable pageable);
 
     /**
-     * 新增 Book
-     *
-     * @param book {@link Book}
+     * 增加书籍
      */
-    Book insertByBook(Book book);
+    void addBook(Book book);
 
     /**
-     * 更新 Book
-     *
-     * @param book {@link Book}
+     * 删除书籍
      */
-    Book update(Book book);
+    void deleteBook(Book book);
 
     /**
-     * 删除 Book
-     *
-     * @param id 编号
+     * 更新书籍信息
      */
-    Book delete(int id);
-
-    /**
-     * 获取 Book
-     *
-     * @param id 编号
-     */
-    Book findById(int id);
+    void updataBook(Book book);
 }
