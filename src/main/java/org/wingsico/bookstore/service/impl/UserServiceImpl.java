@@ -17,17 +17,13 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService{
     @Autowired
-    UserRepo userRepo;
+    private UserRepo userRepo;
 
     @Override
-    public List<User> findall(){
-        return userRepo.findAll();
-    }
+    public List<User> findAll(){ return userRepo.findAll(); }
 
     @Override
-    public void insertUser(User user){
-        userRepo.save(user);
-    }
+    public void insertUser(User user){ userRepo.save(user); }
 
     @Override
     public void deleteUser(User user){

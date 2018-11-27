@@ -12,7 +12,7 @@ public interface UserService {
      * 获取所有的用户
      *
      */
-    List<User> findall();
+    List<User> findAll();
 
     /**
      * 新增用户

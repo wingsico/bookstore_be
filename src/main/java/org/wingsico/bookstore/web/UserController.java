@@ -1,10 +1,18 @@
 package org.wingsico.bookstore.web;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.bind.BindResult;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.wingsico.bookstore.data.UserData;
 import org.wingsico.bookstore.domain.User;
 import org.wingsico.bookstore.service.UserService;
+import org.wingsico.bookstore.status.UserStatus;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -15,28 +23,27 @@ import java.util.List;
 @RequestMapping(value = "/user")
 public class UserController {
     @Autowired
-    UserService userService;
-
-    /**
-     * 获取 User 列表
-     *
-     */
-    @GetMapping(value = {"", "/"})
-    public List<User> getUserList(){
-        return userService.findall();
-    }
+    private UserService userService;
 
     /**
      * 进行增加用户
      *
      */
-    @GetMapping(value = "/insert")
-    public String insertUser(@ModelAttribute("user") String username, @ModelAttribute("password") String password){
-        User user = new User();
-        user.setUser(username);
-        user.setPassword(password);
+    @PostMapping(value = "/insert")
+    public UserStatus insertUser(@Valid @RequestBody User user, BindingResult bindingResult){
+        UserStatus userStatus = new UserStatus();
+        if (bindingResult.hasErrors()){
+            userStatus.setStatus(404);
+            userStatus.setMessage(bindingResult.getFieldError().getDefaultMessage());
+            return userStatus;
+        }
         userService.insertUser(user);
-        return "加入成功";
+        userStatus.setStatus(200);
+        userStatus.setMessage("成功");
+        UserData data = new UserData();
+        data.setUser(user);
+        userStatus.setData(data);
+        return userStatus;
     }
 
     /**
@@ -60,7 +67,7 @@ public class UserController {
     public String updateUser(@PathVariable("id") int id, @ModelAttribute("user") String username, @ModelAttribute("password") String password) {
         User user = new User();
         user.setId(id);
-        user.setUser(username);
+        user.setUserName(username);
         user.setPassword(password);
         userService.updataUser(user);
         return "更新成功";
