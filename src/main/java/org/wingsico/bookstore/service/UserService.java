@@ -25,9 +25,5 @@ public interface UserService {
      */
     User updateUser(User user);
 
-    /**
-     * 查询单个用户的信息
-     *
-     */
-    User queryUser(int id);
+
 }

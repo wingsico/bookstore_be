@@ -35,10 +35,4 @@ public class UserServiceImpl implements UserService{
         return userFind;
     }
 
-    @Override
-    public User queryUser(int id){
-        Optional<User> userOptional = userRepo.findById(id);
-        User userFind = userOptional.get();
-        return userFind;
-    }
 }

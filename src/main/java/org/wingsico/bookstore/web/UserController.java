@@ -3,13 +3,11 @@ package org.wingsico.bookstore.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.wingsico.bookstore.domain.Book;
 import org.wingsico.bookstore.domain.User;
 import org.wingsico.bookstore.service.UserService;
 import org.wingsico.bookstore.status.Status;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +20,7 @@ import java.util.Map;
 @RequestMapping(value = "/user")
 public class UserController {
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     /**
      * 进行注册用户
@@ -46,8 +44,34 @@ public class UserController {
     }
 
     /**
+     * 进行用户登录
+     *
+     */
+    @PostMapping(value = "/login")
+    public Status loginUser(@RequestBody User user){
+        Status userStatus = new Status();
+        try {
+            List<User> users = userService.findAll();
+            for (User userFind:users){
+                if(userFind.getUserName().equals(user.getUserName())&&userFind.getPassword().equals(user.getPassword())){
+                    userStatus.setStatus(200);
+                    userStatus.setMessage("成功");
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("user", userFind);
+                    userStatus.setData(map);
+                    return userStatus;
+                }
+            }
+            userStatus.setStatus(404);
+            userStatus.setMessage("用户名或密码错误");
+            return userStatus;
+        }catch (NullPointerException ex){}
+        return userStatus;
+    }
+
+    /**
      * 进行更新用户
-     * @param id
+     * 
      */
     @PostMapping(value = "/update")
     public Status updateUser(@RequestBody User user, BindingResult bindingResult) {
