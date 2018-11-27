@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.wingsico.bookstore.domain.Book;
+import org.wingsico.bookstore.domain.BookBrief;
 import org.wingsico.bookstore.domain.repo.BookRepo;
 import org.wingsico.bookstore.service.BookService;
 
@@ -27,18 +28,4 @@ public class BookServiceImpl implements BookService {
         return bookRepo.findAll(pageable);
     }
 
-    @Override
-    public void addBook(Book book){
-        bookRepo.save(book);
-    }
-
-    @Override
-    public void deleteBook(Book book){
-        bookRepo.delete(book);
-    }
-
-    @Override
-    public void updataBook(Book book){
-        bookRepo.save(book);
-    }
 }

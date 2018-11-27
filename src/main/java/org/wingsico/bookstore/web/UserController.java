@@ -71,7 +71,7 @@ public class UserController {
 
     /**
      * 进行更新用户
-     * 
+     *
      */
     @PostMapping(value = "/update")
     public Status updateUser(@RequestBody User user, BindingResult bindingResult) {
