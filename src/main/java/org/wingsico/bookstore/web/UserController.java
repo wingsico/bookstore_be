@@ -1,6 +1,5 @@
 package org.wingsico.bookstore.web;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.http.HttpStatus;
@@ -29,8 +28,8 @@ public class UserController {
      * 进行增加用户
      *
      */
-    @PostMapping(value = "/insert")
-    public UserStatus insertUser(@Valid @RequestBody User user, BindingResult bindingResult){
+    @PostMapping(value = "/register")
+    public UserStatus registerUser(@Valid @RequestBody User user, BindingResult bindingResult){
         UserStatus userStatus = new UserStatus();
         if (bindingResult.hasErrors()){
             userStatus.setStatus(404);

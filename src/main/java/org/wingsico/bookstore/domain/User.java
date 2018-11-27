@@ -29,6 +29,10 @@ public class User implements Serializable{
     private String userName;
 
     @Column(nullable = false)
+    @NotBlank(message = "昵称不能为空")
+    private String nickname;
+
+    @Column(nullable = false)
     @NotBlank(message = "密码不能为空")
     @PasswordInformation
     private String password;
