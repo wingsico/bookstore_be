@@ -1,8 +1,6 @@
 package org.wingsico.bookstore.service;
 
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.wingsico.bookstore.domain.User;
 
 import java.util.List;
@@ -20,15 +18,16 @@ public interface UserService {
      */
     void insertUser(User user);
 
-    /**
-     * 删除用户
-     *
-     */
-    void deleteUser(User user);
 
     /**
-     * 更新用户
+     * 修改昵称
      *
      */
-    void updataUser(User user);
+    User updateUser(User user);
+
+    /**
+     * 查询单个用户的信息
+     *
+     */
+    User queryUser(int id);
 }

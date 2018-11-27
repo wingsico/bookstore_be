@@ -22,7 +22,10 @@ public class PasswordInformationValidator implements ConstraintValidator<Passwor
      */
     @Override
     public boolean isValid(String password, ConstraintValidatorContext constraintValidatorContext) {
-        Pattern pattern = Pattern.compile("^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$");
-        return pattern.matcher(password).matches();
+        try{
+            Pattern pattern = Pattern.compile("^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$");
+            return pattern.matcher(password).matches();
+        }catch (NullPointerException ex){ }
+        return true;
     }
 }

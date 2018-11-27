@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class NameUniqueValidator implements ConstraintValidator<NameUnique, String>{
     @Autowired
-    private UserService userService;
+    UserService userService;
     /**
      * 校验器初始化
      * @param nameUnique
@@ -38,9 +38,7 @@ public class NameUniqueValidator implements ConstraintValidator<NameUnique, Stri
                 }
             }
             return true;
-        }catch (NullPointerException ex){
-
-        }
+        }catch (NullPointerException ex){ }
         return true;
     }
 }
