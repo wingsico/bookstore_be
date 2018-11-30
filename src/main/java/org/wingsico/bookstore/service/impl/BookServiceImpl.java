@@ -28,4 +28,6 @@ public class BookServiceImpl implements BookService {
         return bookRepo.findAll(pageable);
     }
 
+    @Override
+    public Book findOne(int id){ return bookRepo.getOne(id); }
 }

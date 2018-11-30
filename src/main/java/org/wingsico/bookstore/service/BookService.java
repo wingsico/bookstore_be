@@ -14,4 +14,9 @@ public interface BookService {
      */
     Page<Book> findAll(Pageable pageable);
 
+    /**
+     *
+     * 查找单本书籍
+     */
+    Book findOne(int id);
 }
