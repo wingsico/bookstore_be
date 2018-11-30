@@ -2,9 +2,11 @@ package org.wingsico.bookstore.domain;
 
 
 import lombok.Data;
+import org.wingsico.bookstore.primarykey.CartOrder;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -14,21 +16,20 @@ import java.util.Date;
 @Entity
 @Table(name = "orders")
 @Data
+@IdClass(CartOrder.class)
 public class Order implements Serializable{
     @Id
+    @Column(nullable = false)
+    private int cartID;
+
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(unique = true)
-    private int id;
+    @Column(nullable = false)
+    private int orderID;
 
     @Column(nullable = false)
-    private int userID;
+    private int status;
 
     @Column(nullable = false)
-    private boolean status;
-
-    @Column(nullable = false)
-    private Date date;
-
-    @Column(nullable = false)
-    private int commodityID;
+    private Timestamp date;
 }

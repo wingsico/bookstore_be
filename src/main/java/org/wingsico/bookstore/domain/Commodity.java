@@ -2,6 +2,9 @@ package org.wingsico.bookstore.domain;
 
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.DynamicUpdate;
+import org.wingsico.bookstore.primarykey.OrderCommodity;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,17 +16,15 @@ import java.io.Serializable;
 @Entity
 @Table(name = "commodities")
 @Data
+@IdClass(OrderCommodity.class)
 public class Commodity implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(unique = true)
-    private int id;
+    @Column(nullable = false)
+    private int commodityID;
 
+    @Id
     @Column(nullable = false)
     private int orderID;
-
-    @Column(nullable = false)
-    private int bookID;
 
     @Column(nullable = false)
     private String bookTitle;

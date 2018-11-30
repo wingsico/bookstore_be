@@ -6,26 +6,32 @@ import java.util.List;
 
 public interface CommodityService {
     /**
-     * 获取该订单商品
+     * 获取全部商品
      *
      */
     List<Commodity> findAll();
 
     /**
-     * 增加商品
+     * 获取该订单的全部商品
      *
      */
-    void addCommodity(int bookID);
+    List<Commodity> findOrderCommodities(int orderID);
 
     /**
-     * 删除商品
+     * 订单中增加商品
      *
      */
-    void deleteCommodity(int id);
+    void addCommodity(int orderID, int id);
+
+    /**
+     * 订单中删除商品
+     *
+     */
+    void deleteCommodity(int orderID, int commodityID);
 
     /**
      * 修改单个商品数量
      *
      */
-    void modifyNumber(int id,int number);
+    void modifyNumber(int orderID, int commodityID, int number);
 }
