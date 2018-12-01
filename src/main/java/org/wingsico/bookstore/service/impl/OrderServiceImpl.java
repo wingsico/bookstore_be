@@ -1,12 +1,9 @@
 package org.wingsico.bookstore.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.namedparam.NamedParameterUtils;
 import org.springframework.stereotype.Service;
-import org.wingsico.bookstore.domain.Commodity;
 import org.wingsico.bookstore.domain.Order;
 import org.wingsico.bookstore.domain.repo.OrderRepo;
-import org.wingsico.bookstore.primarykey.CartOrder;
 import org.wingsico.bookstore.service.CommodityService;
 import org.wingsico.bookstore.service.OrderService;
 
@@ -41,7 +38,7 @@ public class OrderServiceImpl implements OrderService {
         try{
             List<Order> allOrders = findAll();
             for(int i=0;i<allOrders.size();i++){
-                if(allOrders.get(i).getCartID() == userID){
+                if(allOrders.get(i).getUserID() == userID){
                     orders.add(allOrders.get(i));
                 }
             }
@@ -51,37 +48,35 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void addOrder(int cartID, int commodityID){
+    public Order addOrder(int userID, int bookID){
         Order order = new Order();
         Date date = new Date();
         Timestamp nowdate = new Timestamp(date.getTime());
         order.setStatus(0);
         order.setDate(nowdate);
-        order.setCartID(cartID);
+        order.setUserID(userID);
+        order.setBookID(bookID);
         orderRepo.save(order);
-        commodityService.addCommodity(order.getOrderID(), commodityID);
+        commodityService.addCommodity(order.getOrderID(), bookID);
+        return order;
     }
 
     @Override
-    public void deleteOrder(int cartID, int orderID){
-        CartOrder cartOrder = new CartOrder();
-        cartOrder.setCartID(cartID);
-        cartOrder.setOrderID(orderID);
-        Order order = entityManager.find(Order.class, cartOrder);
+    public void deleteOrder(int orderID){
+        Order order = orderRepo.getOne(orderID);
         orderRepo.delete(order);
     }
 
     @Override
-    public void modifyStatus(int cartID, int orderID){
-        CartOrder cartOrder = new CartOrder();
-        cartOrder.setCartID(cartID);
-        cartOrder.setOrderID(orderID);
-        Order order = entityManager.find(Order.class, cartOrder);
+    public Order modifyStatus(int orderID){
+        Order order = orderRepo.getOne(orderID);
         if(order.getStatus()==1){
             order.setStatus(0);
         }
         else {
             order.setStatus(1);
         }
+        orderRepo.save(order);
+        return order;
     }
 }

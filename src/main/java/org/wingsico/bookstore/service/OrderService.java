@@ -22,17 +22,17 @@ public interface OrderService {
      * 增加订单
      *
      */
-    void addOrder(int cartID, int commodityID);
+    Order addOrder(int userID, int bookID);
 
     /**
      * 删除订单
      *
      */
-    void deleteOrder(int cartID, int orderID);
+    void deleteOrder(int orderID);
 
     /**
      * 修改订单的状态
      *
      */
-    void modifyStatus(int cartID, int orderID);
+    Order modifyStatus(int orderID);
 }

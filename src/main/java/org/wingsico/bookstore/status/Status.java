@@ -1,5 +1,6 @@
 package org.wingsico.bookstore.status;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;

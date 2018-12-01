@@ -54,6 +54,7 @@ public class CommodityServiceImpl implements CommodityService{
         commodity.setOrderID(orderID);
         commodity.setBookTitle(book.getTitle());
         commodity.setBookPrice(book.getPrice());
+        commodity.setNumber(1);
         commodityRepo.save(commodity);
     }
 
