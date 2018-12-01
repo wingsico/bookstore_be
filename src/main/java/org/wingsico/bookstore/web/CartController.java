@@ -1,11 +1,11 @@
 package org.wingsico.bookstore.web;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.wingsico.bookstore.domain.Commodity;
 import org.wingsico.bookstore.domain.Order;
 import org.wingsico.bookstore.service.CommodityService;
 import org.wingsico.bookstore.service.OrderService;
@@ -25,13 +25,17 @@ public class CartController {
 
     @Autowired
     OrderService orderService;
+    @Autowired
+    CommodityService commodityService;
 
     /**
      * 获取用户的全部订单
      *
+     * @param userID
+     *
      */
     @PostMapping(value = "/allOrders")
-    public Status findUserOrders(@RequestBody Order order){
+    public Status getUserOrders(@RequestBody Order order){
         Status status = new Status();
         status.setStatus(200);
         status.setMessage("成功");
@@ -46,6 +50,9 @@ public class CartController {
 
     /**
      * 新建订单
+     *
+     * @param userID
+     * @param bookID
      *
      */
     @PostMapping(value = "/create")
@@ -63,6 +70,8 @@ public class CartController {
     /**
      * 删除订单
      *
+     * @param orderID
+     *
      */
     @PostMapping(value = "/delete")
     public Status deleteOrder(@RequestBody Order order){
@@ -70,11 +79,20 @@ public class CartController {
         status.setStatus(200);
         status.setMessage("成功");
         orderService.deleteOrder(order.getOrderID());
+        try {
+            List<Commodity> commodities = commodityService.findOrderCommodities(order.getOrderID());
+            for (Commodity commodity:commodities){
+                commodityService.deleteCommodity(commodity.getOrderID(), commodity.getBookID());
+            }
+        }catch (NullPointerException ex){}
         return status;
     }
 
     /**
      * 修改订单的状态
+     *
+     * @param orderID
+     * 用int类型来表示有没有提交 0代表没提交， 1代表已提交
      *
      */
     @PostMapping(value = "/update")

@@ -21,17 +21,17 @@ public interface CommodityService {
      * 订单中增加商品
      *
      */
-    void addCommodity(int orderID, int id);
+    Commodity addCommodity(int orderID, int bookID);
 
     /**
      * 订单中删除商品
      *
      */
-    void deleteCommodity(int orderID, int commodityID);
+    void deleteCommodity(int orderID, int bookID);
 
     /**
      * 修改单个商品数量
      *
      */
-    void modifyNumber(int orderID, int commodityID, int number);
+    Commodity modifyNumber(int orderID, int bookID, int number);
 }

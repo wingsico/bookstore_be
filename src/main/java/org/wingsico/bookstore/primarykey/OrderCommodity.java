@@ -7,14 +7,14 @@ import java.io.Serializable;
 @Data
 public class OrderCommodity implements Serializable{
 
-    private Integer commodityID;
+    private Integer bookID;
     private Integer orderID;
 
     @Override
     public int hashCode() {
         final int PRIME = 31;
         int result = 1;
-        result = PRIME * result + ((commodityID == null) ? 0 : commodityID.hashCode());
+        result = PRIME * result + ((bookID == null) ? 0 : bookID.hashCode());
         result = PRIME * result + ((orderID == null) ? 0 : orderID.hashCode());
         return result;
     }
@@ -32,11 +32,11 @@ public class OrderCommodity implements Serializable{
         }
 
         final OrderCommodity other = (OrderCommodity) obj;
-        if(commodityID == null){
-            if(other.commodityID != null){
+        if(bookID == null){
+            if(other.bookID != null){
                 return false;
             }
-        }else if(!commodityID.equals(other.commodityID)){
+        }else if(!bookID.equals(other.bookID)){
             return false;
         }
         if(orderID == null){

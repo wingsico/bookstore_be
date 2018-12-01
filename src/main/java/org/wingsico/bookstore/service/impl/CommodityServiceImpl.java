@@ -47,33 +47,35 @@ public class CommodityServiceImpl implements CommodityService{
     }
 
     @Override
-    public void addCommodity(int orderID, int commodityID) {
-        Book book = bookService.findOne(commodityID);
+    public Commodity addCommodity(int orderID, int bookID) {
+        Book book = bookService.findOne(bookID);
         Commodity commodity = new Commodity();
-        commodity.setCommodityID(commodityID);
+        commodity.setBookID(bookID);
         commodity.setOrderID(orderID);
         commodity.setBookTitle(book.getTitle());
         commodity.setBookPrice(book.getPrice());
         commodity.setNumber(1);
         commodityRepo.save(commodity);
+        return commodity;
     }
 
     @Override
-    public void deleteCommodity(int orderID, int commodityID){
+    public void deleteCommodity(int orderID, int bookID){
         OrderCommodity orderCommodity = new OrderCommodity();
         orderCommodity.setOrderID(orderID);
-        orderCommodity.setCommodityID(commodityID);
+        orderCommodity.setBookID(bookID);
         Commodity commodity = entityManager.find(Commodity.class, orderCommodity);
         commodityRepo.delete(commodity);
     }
 
     @Override
-    public void modifyNumber(int orderID,int commodityID, int number){
+    public Commodity modifyNumber(int orderID,int bookID, int number){
         OrderCommodity orderCommodity = new OrderCommodity();
         orderCommodity.setOrderID(orderID);
-        orderCommodity.setCommodityID(commodityID);
+        orderCommodity.setBookID(bookID);
         Commodity commodity = entityManager.find(Commodity.class, orderCommodity);
         commodity.setNumber(number);
         commodityRepo.save(commodity);
+        return commodity;
     }
 }

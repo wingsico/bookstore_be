@@ -24,7 +24,11 @@ public class UserController {
     private UserService userService;
 
     /**
-     * 进行注册用户
+     * 注册用户
+     *
+     * @param userName
+     * @param nickname
+     * @param password
      *
      */
     @PostMapping(value = "/register")
@@ -45,7 +49,10 @@ public class UserController {
     }
 
     /**
-     * 进行用户登录
+     * 用户登录
+     *
+     * @param userName
+     * @param password
      *
      */
     @PostMapping(value = "/login")
@@ -71,7 +78,10 @@ public class UserController {
     }
 
     /**
-     * 进行更新用户
+     * 修改用户昵称
+     *
+     * @param id
+     * @param nickname
      *
      */
     @PostMapping(value = "/update")

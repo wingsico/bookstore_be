@@ -20,7 +20,7 @@ import java.io.Serializable;
 public class Commodity implements Serializable {
     @Id
     @Column(nullable = false)
-    private int commodityID;
+    private int bookID;
 
     @Id
     @Column(nullable = false)
