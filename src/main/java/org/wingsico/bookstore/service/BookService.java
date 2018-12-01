@@ -9,10 +9,16 @@ import java.util.List;
 
 public interface BookService {
     /**
-     * 获取所有 Book
+     * 获取所有书籍
      *
      */
     Page<Book> findAll(Pageable pageable);
+
+    /**
+     * 获取不进行分页的所有书籍
+     *
+     */
+    List<Book> findNoPageAll();
 
     /**
      *

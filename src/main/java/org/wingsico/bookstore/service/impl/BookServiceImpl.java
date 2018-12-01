@@ -29,5 +29,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public List<Book> findNoPageAll(){ return bookRepo.findAll(); }
+
+    @Override
     public Book findOne(int id){ return bookRepo.getOne(id); }
 }

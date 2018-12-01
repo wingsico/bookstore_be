@@ -6,6 +6,7 @@ public class BookBrief {
     private String author;
     private String content;
     private String cover_url;
+    private float price;
 
     public int getId() {
         return id;
@@ -45,5 +46,13 @@ public class BookBrief {
 
     public void setCover_url(String cover_url) {
         this.cover_url = cover_url;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
     }
 }
