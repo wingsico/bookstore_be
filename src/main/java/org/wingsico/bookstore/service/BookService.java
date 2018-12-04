@@ -2,6 +2,7 @@ package org.wingsico.bookstore.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.wingsico.bookstore.domain.Book;
 import org.wingsico.bookstore.domain.BookBrief;
 
@@ -12,17 +13,25 @@ public interface BookService {
      * 获取所有书籍
      *
      */
-    Page<Book> findAll(Pageable pageable);
+    Page<Book> findAll(int classification, Pageable pageable);
 
     /**
-     * 获取不进行分页的所有书籍
+     * 获取不进行分页的分类后的所有书籍
      *
      */
-    List<Book> findNoPageAll();
+    List<Book> findNoPageAll(int classification);
+
+    /**
+     * 获取所有书籍
+     *
+     */
+    List<Book> findAllBooks();
 
     /**
      *
      * 查找单本书籍
      */
     Book findOne(int id);
+
+    List<Book> likeQuery(String content);
 }

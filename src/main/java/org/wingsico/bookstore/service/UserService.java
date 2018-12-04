@@ -25,4 +25,15 @@ public interface UserService {
      */
     User updateUser(User user);
 
+    /**
+     * 修改用户余额
+     *
+     */
+    User updateDeposit(int userID, float deposit);
+
+    /**
+     * 修改用户支付密码
+     *
+     */
+    User updatePayment(int userID, String String);
 }

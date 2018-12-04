@@ -34,5 +34,5 @@ public interface OrderService {
      * 修改订单的状态
      *
      */
-    Order modifyStatus(int orderID);
+    Order modifyStatus(int orderID, int status);
 }

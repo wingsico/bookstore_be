@@ -39,6 +39,7 @@ public class UserController {
             userStatus.setMessage(bindingResult.getFieldError().getDefaultMessage());
             return userStatus;
         }
+        user.setDeposit(1000);
         userService.insertUser(user);
         userStatus.setStatus(200);
         userStatus.setMessage("成功");
@@ -99,5 +100,43 @@ public class UserController {
         map.put("user", userFind);
         userStatus.setData(map);
         return userStatus;
+    }
+
+    /**
+     * 修改用户余额
+     *
+     * @param id
+     * @param deposit
+     *
+     */
+    @PostMapping(value = "/updateDeposit")
+    public Status updateDeposit(@RequestBody User user){
+        Status status = new Status();
+        User userFind = userService.updateDeposit(user.getId(), user.getDeposit());
+        status.setStatus(200);
+        status.setMessage("成功");
+        Map<String, Object> map = new HashMap<>();
+        map.put("user", userFind);
+        status.setData(map);
+        return status;
+    }
+
+    /**
+     * 修改支付密码
+     *
+     * @param id
+     * @param payment
+     *
+     */
+    @PostMapping(value = "updatePayment")
+    public Status updatePayment(@RequestBody User user){
+        Status status = new Status();
+        User userFind = userService.updatePayment(user.getId(), user.getPayment());
+        status.setStatus(200);
+        status.setMessage("成功");
+        Map<String, Object> map = new HashMap<>();
+        map.put("user", userFind);
+        status.setData(map);
+        return status;
     }
 }

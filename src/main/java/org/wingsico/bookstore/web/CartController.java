@@ -92,7 +92,7 @@ public class CartController {
      * 修改订单的状态
      *
      * @param orderID
-     * 用int类型来表示有没有提交 0代表没提交， 1代表已提交
+     * @param status 用int类型来表示有没有提交 1代表代付款， 2代表付款但没收货， 3代表完成
      *
      */
     @PostMapping(value = "/update")
@@ -101,7 +101,7 @@ public class CartController {
         status.setStatus(200);
         status.setMessage("成功");
         Map<String, Object> map = new HashMap<>();
-        Order updatedOrder = orderService.modifyStatus(order.getOrderID());
+        Order updatedOrder = orderService.modifyStatus(order.getOrderID(), order.getStatus());
         map.put("order", updatedOrder);
         status.setData(map);
         return status;

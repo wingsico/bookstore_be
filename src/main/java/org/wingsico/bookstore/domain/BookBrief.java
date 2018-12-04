@@ -4,7 +4,7 @@ public class BookBrief {
     private int id;
     private String title;
     private String author;
-    private String content;
+    private int classification;
     private String cover_url;
     private float price;
 
@@ -32,12 +32,12 @@ public class BookBrief {
         this.author = author;
     }
 
-    public String getContent() {
-        return content;
+    public int getClassification() {
+        return classification;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setClassification(int classification) {
+        this.classification = classification;
     }
 
     public String getCover_url() {

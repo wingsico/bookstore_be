@@ -15,6 +15,7 @@ import java.io.Serializable;
  * User实体类
  *
  */
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 @Entity
 @Table(name = "users")
 @Data
@@ -37,4 +38,10 @@ public class User implements Serializable{
     @NotBlank(message = "密码不能为空")
     @PasswordInformation
     private String password;
+
+    @Column(nullable = false)
+    private float deposit;
+
+    @Column(nullable = false)
+    private String payment;
 }

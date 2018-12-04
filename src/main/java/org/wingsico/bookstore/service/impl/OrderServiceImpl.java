@@ -52,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         Date date = new Date();
         Timestamp nowdate = new Timestamp(date.getTime());
-        order.setStatus(0);
+        order.setStatus(1);
         order.setDate(nowdate);
         order.setUserID(userID);
         order.setBookID(bookID);
@@ -68,14 +68,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order modifyStatus(int orderID){
+    public Order modifyStatus(int orderID, int status){
         Order order = orderRepo.getOne(orderID);
-        if(order.getStatus()==1){
-            order.setStatus(0);
-        }
-        else {
-            order.setStatus(1);
-        }
+        order.setStatus(status);
         orderRepo.save(order);
         return order;
     }

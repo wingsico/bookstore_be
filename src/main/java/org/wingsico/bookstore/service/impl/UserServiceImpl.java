@@ -34,4 +34,20 @@ public class UserServiceImpl implements UserService{
         userRepo.save(userFind);
         return userFind;
     }
+
+    @Override
+    public User updateDeposit(int userID, float deposit){
+        User user = userRepo.getOne(userID);
+        user.setDeposit(deposit);
+        userRepo.save(user);
+        return user;
+    }
+
+    @Override
+    public User updatePayment(int userID, String payment){
+        User user = userRepo.getOne(userID);
+        user.setPayment(payment);
+        userRepo.save(user);
+        return user;
+    }
 }
