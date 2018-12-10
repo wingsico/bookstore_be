@@ -12,26 +12,32 @@ public interface CommodityService {
     List<Commodity> findAll();
 
     /**
-     * 获取该订单的全部商品
+     * 获取该用户购物车的全部商品
      *
      */
-    List<Commodity> findOrderCommodities(int orderID);
+    List<Commodity> findOrderCommodities(int userID);
 
     /**
-     * 订单中增加商品
+     * 购物车中增加商品
      *
      */
-    Commodity addCommodity(int orderID, int bookID);
+    Commodity addCommodity(int userID, int bookID, int number);
 
     /**
-     * 订单中删除商品
+     * 购物车中删除商品
      *
      */
-    void deleteCommodity(int orderID, int bookID);
+    void deleteCommodity(int userID, int bookID);
 
     /**
      * 修改单个商品数量
      *
      */
-    Commodity modifyNumber(int orderID, int bookID, int number);
+    Commodity modifyNumber(int userID, int bookID, int number);
+
+    /**
+     * 查询该用户的该商品
+     *
+     */
+    Commodity query(int userID, int bookID);
 }

@@ -36,11 +36,10 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User updateDeposit(int userID, float deposit){
+    public void updateDeposit(int userID, float deposit){
         User user = userRepo.getOne(userID);
         user.setDeposit(deposit);
         userRepo.save(user);
-        return user;
     }
 
     @Override
@@ -49,5 +48,10 @@ public class UserServiceImpl implements UserService{
         user.setPayment(payment);
         userRepo.save(user);
         return user;
+    }
+
+    @Override
+    public User query(int userID){
+        return userRepo.getOne(userID);
     }
 }

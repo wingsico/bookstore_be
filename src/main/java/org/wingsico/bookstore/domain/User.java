@@ -6,6 +6,7 @@ import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
 import org.wingsico.bookstore.annotation.NameUnique;
 import org.wingsico.bookstore.annotation.PasswordInformation;
+import org.wingsico.bookstore.annotation.PaymentInformation;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -28,7 +29,7 @@ public class User implements Serializable{
     @Column(nullable = false)
     @NotBlank(message = "用户名不能为空")
     @NameUnique
-    private String userName;
+    private String username;
 
     @Column(nullable = false)
     @NotBlank(message = "昵称不能为空")
@@ -42,6 +43,10 @@ public class User implements Serializable{
     @Column(nullable = false)
     private float deposit;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
+    @PaymentInformation
     private String payment;
+
+    @Column(nullable = false)
+    private String role;
 }

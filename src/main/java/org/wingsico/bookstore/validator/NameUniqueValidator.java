@@ -25,15 +25,15 @@ public class NameUniqueValidator implements ConstraintValidator<NameUnique, Stri
 
     /**
      * 校验方法
-     * @param userName
+     * @param username
      * @param constraintValidatorContext
      */
     @Override
-    public boolean isValid(String userName, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(String username, ConstraintValidatorContext constraintValidatorContext) {
         try{
             List<User> users = userService.findAll();
             for (User user:users) {
-                if (userName.equals(user.getUserName())) {
+                if (username.equals(user.getUsername())) {
                     return false;
                 }
             }

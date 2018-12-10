@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.wingsico.bookstore.domain.Book;
 import org.wingsico.bookstore.domain.Commodity;
 import org.wingsico.bookstore.domain.repo.CommodityRepo;
-import org.wingsico.bookstore.primarykey.OrderCommodity;
+import org.wingsico.bookstore.primarykey.UserCommodity;
 import org.wingsico.bookstore.service.BookService;
 import org.wingsico.bookstore.service.CommodityService;
 
@@ -32,12 +32,12 @@ public class CommodityServiceImpl implements CommodityService{
     public List<Commodity> findAll(){ return commodityRepo.findAll(); }
 
     @Override
-    public List<Commodity> findOrderCommodities(int orderID){
+    public List<Commodity> findOrderCommodities(int userID){
         List<Commodity> commodities = new ArrayList<>();
         try{
             List<Commodity> allCommodities = findAll();
             for(int i=0;i<allCommodities.size();i++){
-                if(allCommodities.get(i).getOrderID()==orderID){
+                if(allCommodities.get(i).getUserID()==userID){
                     commodities.add(allCommodities.get(i));
                 }
             }
@@ -47,35 +47,40 @@ public class CommodityServiceImpl implements CommodityService{
     }
 
     @Override
-    public Commodity addCommodity(int orderID, int bookID) {
+    public Commodity addCommodity(int userID, int bookID, int number) {
         Book book = bookService.findOne(bookID);
         Commodity commodity = new Commodity();
         commodity.setBookID(bookID);
-        commodity.setOrderID(orderID);
-        commodity.setBookTitle(book.getTitle());
-        commodity.setBookPrice(book.getPrice());
-        commodity.setNumber(1);
+        commodity.setUserID(userID);
+        commodity.setTitle(book.getTitle());
+        commodity.setPrice(book.getPrice());
+        commodity.setClassification(book.getClassification());
+        commodity.setCover_url(book.getCover_url());
+        commodity.setNumber(number);
         commodityRepo.save(commodity);
         return commodity;
     }
 
     @Override
-    public void deleteCommodity(int orderID, int bookID){
-        OrderCommodity orderCommodity = new OrderCommodity();
-        orderCommodity.setOrderID(orderID);
-        orderCommodity.setBookID(bookID);
-        Commodity commodity = entityManager.find(Commodity.class, orderCommodity);
+    public void deleteCommodity(int userID, int bookID){
+        Commodity commodity = query(userID, bookID);
         commodityRepo.delete(commodity);
     }
 
     @Override
-    public Commodity modifyNumber(int orderID,int bookID, int number){
-        OrderCommodity orderCommodity = new OrderCommodity();
-        orderCommodity.setOrderID(orderID);
-        orderCommodity.setBookID(bookID);
-        Commodity commodity = entityManager.find(Commodity.class, orderCommodity);
+    public Commodity modifyNumber(int userID, int bookID, int number){
+        Commodity commodity = query(userID, bookID);
         commodity.setNumber(number);
         commodityRepo.save(commodity);
+        return commodity;
+    }
+
+    @Override
+    public Commodity query(int userID, int bookID){
+        UserCommodity userCommodity = new UserCommodity();
+        userCommodity.setUserID(userID);
+        userCommodity.setBookID(bookID);
+        Commodity commodity = entityManager.find(Commodity.class, userCommodity);
         return commodity;
     }
 }

@@ -2,7 +2,9 @@ package org.wingsico.bookstore.service;
 
 import org.wingsico.bookstore.domain.Commodity;
 import org.wingsico.bookstore.domain.Order;
+import org.wingsico.bookstore.domain.OrderBooks;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface OrderService {
@@ -22,7 +24,7 @@ public interface OrderService {
      * 增加订单
      *
      */
-    Order addOrder(int userID, int bookID);
+    OrderBooks addOrder(int userID, ArrayList<Integer> bookIDs);
 
     /**
      * 删除订单
@@ -34,5 +36,5 @@ public interface OrderService {
      * 修改订单的状态
      *
      */
-    Order modifyStatus(int orderID, int status);
+    void modifyStatus(int orderID, int status);
 }

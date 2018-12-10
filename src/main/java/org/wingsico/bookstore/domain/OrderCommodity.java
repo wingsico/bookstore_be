@@ -1,6 +1,5 @@
 package org.wingsico.bookstore.domain;
 
-
 import lombok.Data;
 import org.wingsico.bookstore.primarykey.UserCommodity;
 
@@ -8,14 +7,14 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * 购物车中的商品实体类
+ * 订单中的商品实体类
  *
  */
 @Entity
-@Table(name = "commodities")
+@Table(name = "orderCommodities")
 @Data
 @IdClass(UserCommodity.class)
-public class Commodity implements Serializable {
+public class OrderCommodity implements Serializable {
     @Id
     @Column(nullable = false)
     private int bookID;

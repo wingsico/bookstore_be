@@ -29,11 +29,17 @@ public interface UserService {
      * 修改用户余额
      *
      */
-    User updateDeposit(int userID, float deposit);
+    void updateDeposit(int userID, float deposit);
 
     /**
      * 修改用户支付密码
      *
      */
     User updatePayment(int userID, String String);
+
+    /**
+     * 查询用户
+     *
+     */
+    User query(int userID);
 }

@@ -29,6 +29,11 @@ public class BookServiceImpl implements BookService {
     BookRepo bookRepo;
 
     @Override
+    public Page<Book> findNoClassificationAll(Pageable pageable){
+        return bookRepo.findAll(pageable);
+    }
+
+    @Override
     public Page<Book> findAll(int classification, Pageable pageable) {
         return bookRepo.findByClassification(classification, pageable);
     }

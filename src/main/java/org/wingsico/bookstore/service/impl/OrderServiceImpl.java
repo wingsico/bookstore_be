@@ -3,6 +3,7 @@ package org.wingsico.bookstore.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.wingsico.bookstore.domain.Order;
+import org.wingsico.bookstore.domain.OrderBooks;
 import org.wingsico.bookstore.domain.repo.OrderRepo;
 import org.wingsico.bookstore.service.CommodityService;
 import org.wingsico.bookstore.service.OrderService;
@@ -48,30 +49,59 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order addOrder(int userID, int bookID){
-        Order order = new Order();
+    public OrderBooks addOrder(int userID, ArrayList<Integer> bookIDs){
+        OrderBooks orderBooks = new OrderBooks();
+        int orderUsedID = 0;
+        try{
+            List<Order> allOrder = findAll();
+            for(int i=0;i<allOrder.size();i++){
+                if(orderUsedID<allOrder.get(i).getOrderID()){
+                    orderUsedID = allOrder.get(i).getOrderID();
+                }
+            }
+        }catch (NullPointerException ex){}
+        int orderID = orderUsedID + 1;
         Date date = new Date();
         Timestamp nowdate = new Timestamp(date.getTime());
-        order.setStatus(1);
-        order.setDate(nowdate);
-        order.setUserID(userID);
-        order.setBookID(bookID);
-        orderRepo.save(order);
-        commodityService.addCommodity(order.getOrderID(), bookID);
-        return order;
+        for(int i=0;i<bookIDs.size();i++){
+            Order order = new Order();
+            order.setOrderID(orderID);
+            order.setStatus(1);
+            order.setDate(nowdate);
+            order.setUserID(userID);
+            order.setBookID(bookIDs.get(i));
+            orderRepo.save(order);
+        }
+        orderBooks.setBookIDs(bookIDs);
+        orderBooks.setDate(nowdate);
+        orderBooks.setOrderID(orderID);
+        orderBooks.setStatus(1);
+        orderBooks.setUserID(userID);
+        return orderBooks;
     }
 
     @Override
     public void deleteOrder(int orderID){
-        Order order = orderRepo.getOne(orderID);
-        orderRepo.delete(order);
+        try {
+            List<Order> orders = findAll();
+            for(int i=0;i<orders.size();i++){
+                if(orders.get(i).getOrderID()==orderID){
+                    orderRepo.delete(orders.get(i));
+                }
+            }
+        }catch (NullPointerException ex){}
     }
 
     @Override
-    public Order modifyStatus(int orderID, int status){
-        Order order = orderRepo.getOne(orderID);
-        order.setStatus(status);
-        orderRepo.save(order);
-        return order;
+    public void modifyStatus(int orderID, int status){
+        try {
+            List<Order> orders = findAll();
+            for(int i=0;i<orders.size();i++){
+                if(orders.get(i).getOrderID()==orderID){
+                    orders.get(i).setStatus(status);
+                    orderRepo.save(orders.get(i));
+                }
+            }
+        }catch (NullPointerException ex){}
     }
 }

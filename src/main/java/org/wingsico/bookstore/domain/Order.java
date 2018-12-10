@@ -3,6 +3,7 @@ package org.wingsico.bookstore.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import org.wingsico.bookstore.primarykey.OrderCommodity;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,10 +17,15 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "orders")
 @Data
+@IdClass(OrderCommodity.class)
 public class Order implements Serializable{
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(unique = true)
+    @Column(nullable = false)
+    private int bookID;
+
+    @Id
+    @Column(nullable = false)
     private int orderID;
 
     @Column(nullable = false)
@@ -30,7 +36,4 @@ public class Order implements Serializable{
 
     @Column(nullable = false)
     private Timestamp date;
-
-    @Column(nullable = false)
-    private int bookID;
 }

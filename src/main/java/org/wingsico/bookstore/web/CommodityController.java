@@ -1,13 +1,11 @@
 package org.wingsico.bookstore.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.wingsico.bookstore.domain.Commodity;
 import org.wingsico.bookstore.service.CommodityService;
-import org.wingsico.bookstore.status.Status;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,77 +23,78 @@ public class CommodityController {
     CommodityService commodityService;
 
     /**
-     * 获取订单的全部商品
+     * 获取该购物车中的全部商品
      *
-     * @param orderID
+     * @param userID
      *
      */
     @PostMapping(value = "allCommodities")
-    public Status getOrderCommodities(@RequestBody Commodity commodity){
-        Status status = new Status();
-        status.setStatus(200);
-        status.setMessage("成功");
+    public ResponseEntity<Map<String,Object>> getOrderCommodities(@RequestHeader("Authorization") int userID){
         Map<String, Object> map = new HashMap<>();
+        map.put("status", 200);
+        map.put("message", "成功");
+        Map<String, Object> newMap = new HashMap<>();
         try {
-            List<Commodity> commodities = commodityService.findOrderCommodities(commodity.getOrderID());
-            map.put("commodities", commodities);
+            List<Commodity> commodities = commodityService.findOrderCommodities(userID);
+            newMap.put("commodities", commodities);
         }catch (NullPointerException ex){}
-        status.setData(map);
-        return status;
+        map.put("data", newMap);
+        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
     }
 
     /**
-     * 订单中增加商品种类
+     * 购物车中增加增加商品种类
      *
-     * @param orderID
+     * @param userID
      * @param bookID
+     * @param number
      *
      */
     @PostMapping(value = "addCommodities")
-    public Status addCommodities(@RequestBody Commodity commodity){
-        Status status = new Status();
-        status.setStatus(200);
-        status.setMessage("成功");
+    public ResponseEntity<Map<String,Object>> addCommodities(@RequestHeader("Authorization") int userID, @RequestBody Commodity commodity){
         Map<String, Object> map = new HashMap<>();
-        Commodity finishedCommodity = commodityService.addCommodity(commodity.getOrderID(), commodity.getBookID());
-        map.put("commodity", finishedCommodity);
-        status.setData(map);
-        return status;
+        map.put("status", 200);
+        map.put("message", "成功");
+        Map<String, Object> newMap = new HashMap<>();
+        Commodity finishedCommodity = commodityService.addCommodity(userID, commodity.getBookID(), commodity.getNumber());
+        newMap.put("commodity", finishedCommodity);
+        map.put("data", newMap);
+        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
     }
 
     /**
-     * 订单中减少商品
+     * 购物车中减少商品
      *
-     * @param orderID
+     * @param userID
      * @param bookID
      *
      */
     @PostMapping(value = "deleteCommodities")
-    public Status deleteCommodities(@RequestBody Commodity commodity){
-        Status status = new Status();
-        status.setStatus(200);
-        status.setMessage("成功");
-        commodityService.deleteCommodity(commodity.getOrderID(), commodity.getBookID());
-        return status;
+    public ResponseEntity<Map<String,Object>> deleteCommodities(@RequestHeader("Authorization") int userID, @RequestBody Commodity commodity){
+        Map<String, Object> map = new HashMap<>();
+        map.put("status", 200);
+        map.put("message", "成功");
+        commodityService.deleteCommodity(userID, commodity.getBookID());
+        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
     }
 
     /**
      * 修改商品的数目
      *
-     * @param orderID
+     * @param userID
      * @param bookID
      * @param number
      *
      */
     @PostMapping(value = "updateNumber")
-    public Status updateNumber(@RequestBody Commodity commodity){
-        Status status = new Status();
-        status.setStatus(200);
-        status.setMessage("成功");
+    public ResponseEntity<Map<String,Object>> updateNumber(@RequestHeader("Authorization") int userID, @RequestBody Commodity commodity){
         Map<String, Object> map = new HashMap<>();
-        Commodity updatedCommodities = commodityService.modifyNumber(commodity.getOrderID(), commodity.getBookID(), commodity.getNumber());
-        map.put("commodity", updatedCommodities);
-        status.setData(map);
-        return status;
+        map.put("status", 200);
+        map.put("message", "成功");
+        Map<String, Object> newMap = new HashMap<>();
+        Commodity updatedCommodities = commodityService.modifyNumber(userID, commodity.getBookID(), commodity.getNumber());
+        newMap.put("commodity", updatedCommodities);
+        map.put("data", newMap);
+        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
     }
 }
