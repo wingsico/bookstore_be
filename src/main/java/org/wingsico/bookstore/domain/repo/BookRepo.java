@@ -16,10 +16,14 @@ import java.util.List;
  */
 @Repository
 public interface BookRepo extends JpaRepository<Book, Integer> {
-    @Query(value = "SELECT * FROM BOOKS WHERE CLASSIFICATION = ?1",
-            countQuery = "SELECT count(*) FROM BOOKS WHERE CLASSIFICATION = ?1",
-            nativeQuery = true)
+//    @Query(value = "SELECT * FROM BOOKS WHERE CLASSIFICATION = ?1",
+//    countQuery = "SELECT count(*) FROM BOOKS WHERE CLASSIFICATION = ?1",
+//    nativeQuery = true)
+    @Query
     Page<Book> findByClassification(int classification, Pageable pageable);
+
+    @Query
+    List<Book> findByClassification(int classification);
 
     @Query("SELECT b FROM Book b WHERE b.content LIKE CONCAT('%',:content,'%')")
     List<Book> findByContent(@Param("content") String content);

@@ -17,7 +17,6 @@ import java.sql.Timestamp;
 @Data
 public class Book implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true)
     private int id;
 

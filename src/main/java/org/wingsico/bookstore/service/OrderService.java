@@ -37,4 +37,6 @@ public interface OrderService {
      *
      */
     void modifyStatus(int orderID, int status);
+
+    Order query(int orderID);
 }

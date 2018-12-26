@@ -104,4 +104,18 @@ public class OrderServiceImpl implements OrderService {
             }
         }catch (NullPointerException ex){}
     }
+
+    @Override
+    public Order query(int orderID){
+        Order order = new Order();
+        try {
+            List<Order> orders = findAll();
+            for (int i=0;i<orders.size();i++){
+                if(orders.get(i).getOrderID() == orderID){
+                    return orders.get(i);
+                }
+            }
+        }catch (NullPointerException ex){}
+        return order;
+    }
 }

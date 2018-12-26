@@ -62,6 +62,8 @@ public class OrderController {
                     orderShow.setStatus(orders.get(i).getStatus());
                     orderShow.setOrderID(orders.get(i).getOrderID());
                     orderShow.setUserID(userID);
+                    User user = userService.query(userID);
+                    orderShow.setUsername(user.getUsername());
                     ArrayList<OrderCommodity> orderCommodities = new ArrayList<>();
                     orderCommodities.add(orderCommodity);
                     orderShow.setOrderCommodities(orderCommodities);
@@ -77,12 +79,25 @@ public class OrderController {
     /**
      * 获取单个订单的详情
      *
+     * @param userID
      * @param orderID
      *
      */
     @PostMapping(value = "/findOrder")
-    public ResponseEntity<Map<String,Object>> findOrder(@RequestBody Order order){
+    public ResponseEntity<Map<String,Object>> findOrder(@RequestHeader("Authorization") int userID, @RequestBody Order order){
         Map<String, Object> map = new HashMap<>();
+        User userFind = userService.query(userID);
+        Order order1 = orderService.query(order.getOrderID());
+        if(order1.getOrderID()==0){
+            map.put("status", 400);
+            map.put("message", "没有该订单");
+            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.BAD_REQUEST);
+        }
+        if(userFind.getRole().equals("normal")&&order1.getUserID()!=userID){
+            map.put("status", 403);
+            map.put("message", "没有权限访问该订单");
+            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.FORBIDDEN);
+        }
         map.put("status", 200);
         map.put("message", "成功");
         Map<String, Object> newMap = new HashMap<>();
@@ -101,6 +116,8 @@ public class OrderController {
                     orderShow.setUserID(orderFind.getUserID());
                     orderShow.setOrderID(orderFind.getOrderID());
                     orderShow.setStatus(orderFind.getStatus());
+                    User user = userService.query(orderFind.getUserID());
+                    orderShow.setUsername(user.getUsername());
                     orderShow.setDate(orderFind.getDate());
                 }
             }
@@ -152,6 +169,8 @@ public class OrderController {
                 if (addedOrder.getOrderID() == orders.get(i).getOrderID()){
                     Order orderFind = orders.get(i);
                     orderShow.setUserID(orderFind.getUserID());
+                    User user = userService.query(orderFind.getUserID());
+                    orderShow.setUsername(user.getUsername());
                     orderShow.setOrderID(orderFind.getOrderID());
                     orderShow.setStatus(orderFind.getStatus());
                     orderShow.setDate(orderFind.getDate());
@@ -203,6 +222,19 @@ public class OrderController {
                 for (int i = 0; i < orders.size(); i++) {
                     if (orders.get(i).getOrderID() == payOrder.getOrderID()) {
                         bookIDs.add(orders.get(i).getBookID());
+                    }
+                }
+                for (int i = 0; i < bookIDs.size(); i++) {
+                    Commodity commodity = commodityService.query(userID, bookIDs.get(i));
+                    float deposit = user.getDeposit() - commodity.getNumber() * commodity.getPrice();
+                    if(deposit < 0){
+                        map.put("status", 400);
+                        map.put("message", "余额不足");
+                        return new ResponseEntity<Map<String,Object>>(map,HttpStatus.BAD_REQUEST);
+                    }
+                }
+                for (int i = 0; i < orders.size(); i++) {
+                    if (orders.get(i).getOrderID() == payOrder.getOrderID()) {
                         orderService.modifyStatus(payOrder.getOrderID(), 2);
                     }
                 }
@@ -212,7 +244,6 @@ public class OrderController {
                     userService.updateDeposit(userID, deposit);
                     commodityService.deleteCommodity(userID, bookIDs.get(i));
                 }
-
                 map.put("status", 200);
                 map.put("message", "成功");
             }

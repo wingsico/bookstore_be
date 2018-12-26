@@ -33,16 +33,7 @@ public class CommodityServiceImpl implements CommodityService{
 
     @Override
     public List<Commodity> findOrderCommodities(int userID){
-        List<Commodity> commodities = new ArrayList<>();
-        try{
-            List<Commodity> allCommodities = findAll();
-            for(int i=0;i<allCommodities.size();i++){
-                if(allCommodities.get(i).getUserID()==userID){
-                    commodities.add(allCommodities.get(i));
-                }
-            }
-            return commodities;
-        }catch (NullPointerException ex){}
+        List<Commodity> commodities = commodityRepo.findAllByUserID(userID);
         return commodities;
     }
 

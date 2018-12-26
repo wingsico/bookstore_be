@@ -40,17 +40,17 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> findNoPageAll(int classification){
-        List<Book> books = new ArrayList<>();
-        try {
-            List<Book> allBooks = bookRepo.findAll();
-            for(int i=0;i<allBooks.size();i++){
-                if (allBooks.get(i).getClassification() == classification){
-                    books.add(allBooks.get(i));
-                }
-            }
-        }catch (NullPointerException ex){}
+        List<Book> books = bookRepo.findByClassification(classification);
         return books;
     }
+
+    @Override
+    public int getNumber(){
+        return (int)bookRepo.count();
+    }
+
+    @Override
+    public Book addBook(Book book){ return bookRepo.save(book); }
 
     @Override
     public List<Book> findAllBooks(){ return bookRepo.findAll(); }

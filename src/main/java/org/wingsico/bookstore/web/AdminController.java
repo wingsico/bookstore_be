@@ -1,19 +1,18 @@
 package org.wingsico.bookstore.web;
 
+
+import com.jcraft.jsch.SftpException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.wingsico.bookstore.domain.*;
-import org.wingsico.bookstore.service.CommodityService;
-import org.wingsico.bookstore.service.OrderCommodityService;
-import org.wingsico.bookstore.service.OrderService;
-import org.wingsico.bookstore.service.UserService;
+import org.wingsico.bookstore.service.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.*;
 
 /**
  * Admin控制层
@@ -31,6 +30,8 @@ public class AdminController {
     UserService userService;
     @Autowired
     OrderCommodityService orderCommodityService;
+    @Autowired
+    BookService bookService;
 
     /**
      * 查看所有订单情况 或者分类后的订单情况
@@ -38,8 +39,8 @@ public class AdminController {
      * @param 无 或者 status
      *
      */
-    @PostMapping(value = "/allOrders")
-    public ResponseEntity<Map<String,Object>> getUserOrders(Order order){
+    @GetMapping(value = "/allOrders")
+    public ResponseEntity<Map<String,Object>> getUserOrders(@RequestParam(name = "status", defaultValue = "0") int status){
         Map<String, Object> map = new HashMap<>();
         map.put("status", 200);
         map.put("message", "成功");
@@ -47,10 +48,10 @@ public class AdminController {
         List<OrderShow> orderShows = new ArrayList<>();
         try {
             List<Order> orders = new ArrayList<>();
-            if(order.getStatus() == 1 || order.getStatus() == 2){
+            if(status == 1 || status == 2){
                 List<Order> allOrders = orderService.findAll();
                 for(int i=0;i<allOrders.size();i++){
-                    if(allOrders.get(i).getStatus() == order.getStatus()){
+                    if(allOrders.get(i).getStatus() == status){
                         orders.add(allOrders.get(i));
                     }
                 }
@@ -73,6 +74,8 @@ public class AdminController {
                     orderShow.setStatus(orders.get(i).getStatus());
                     orderShow.setOrderID(orders.get(i).getOrderID());
                     orderShow.setUserID(orders.get(i).getUserID());
+                    User user = userService.query(orders.get(i).getUserID());
+                    orderShow.setUsername(user.getUsername());
                     ArrayList<OrderCommodity> orderCommodities = new ArrayList<>();
                     orderCommodities.add(orderCommodity);
                     orderShow.setOrderCommodities(orderCommodities);
@@ -89,6 +92,50 @@ public class AdminController {
      * 增加书籍
      *
      */
+    @PostMapping(value = "/addBooks")
+    public ResponseEntity<Map<String,Object>> addBooks(BookInput bookInput){
+        Map<String, Object> map = new HashMap<>();
+        map.put("status", 200);
+        map.put("message", "成功");
+        int maxID = 0;
+        try {
+            List<Book> books = bookService.findAllBooks();
+            for(int i=0;i<books.size();i++){
+                if(books.get(i).getId() > maxID){
+                    maxID = books.get(i).getId();
+                }
+            }
+        }catch (NullPointerException ex){}
+        Book book = new Book();
+        book.setId(maxID+1);
+        book.setClassification(bookInput.getClassification());
+        book.setAuthor_intro(bookInput.getAuthor_intro());
+        book.setAuthor(bookInput.getAuthor());
+        book.setContent(bookInput.getContent());
+        book.setPress(bookInput.getPress());
+        Timestamp timestamp = Timestamp.valueOf(bookInput.getPublish_date());
+        book.setPublish_date(timestamp);
+        book.setPrice(bookInput.getPrice());
+        book.setTitle(bookInput.getTitle());
+        MultipartFile file = bookInput.getCover_url();
+        try{
+            byte[] bytes = file.getBytes();
+            String name = file.getOriginalFilename();
+            FileConverse fileConverse = new FileConverse();
+            fileConverse.login();
+            fileConverse.upload(name, bytes);
+            String url = fileConverse.url();
+            fileConverse.logout();
+            book.setCover_url(url);
+        }
+        catch (SftpException e){e.printStackTrace();}
+        catch (IOException ex){ex.printStackTrace();}
+        Book bookAdd = bookService.addBook(book);
+        Map<String, Object> newMap = new HashMap<>();
+        newMap.put("book", bookAdd);
+        map.put("data",newMap);
+        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+    }
 
 
     /**
@@ -119,6 +166,8 @@ public class AdminController {
                     Order orderFind = orders.get(i);
                     orderShow.setUserID(orderFind.getUserID());
                     orderShow.setOrderID(orderFind.getOrderID());
+                    User user = userService.query(orderFind.getUserID());
+                    orderShow.setUsername(user.getUsername());
                     orderShow.setStatus(orderFind.getStatus());
                     orderShow.setDate(orderFind.getDate());
                 }
@@ -144,8 +193,6 @@ public class AdminController {
     @PostMapping(value = "/query")
     public ResponseEntity<Map<String,Object>> loginUser(@RequestBody User user){
         Map<String, Object> map = new HashMap<>();
-        map.put("status", 200);
-        map.put("message", "成功");
         try {
             List<User> users = userService.findAll();
             for (User userFind:users){
@@ -156,10 +203,17 @@ public class AdminController {
                     userShow.setNickname(userFind.getNickname());
                     userShow.setDeposit(userFind.getDeposit());
                     userShow.setRole(userFind.getRole());
+                    map.put("status", 200);
+                    map.put("message", "成功");
                     Map<String, Object> userMap = new HashMap<>();
                     userMap.put("user", userShow);
                     map.put("data", userMap);
                     return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+                }
+                else {
+                    map.put("status", 400);
+                    map.put("message", "该用户不存在");
+                    return new ResponseEntity<Map<String,Object>>(map,HttpStatus.BAD_REQUEST);
                 }
             }
         }catch (NullPointerException ex){}

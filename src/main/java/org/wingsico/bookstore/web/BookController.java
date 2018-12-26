@@ -46,23 +46,22 @@ public class BookController {
             List<Book> books = bookService.findNoClassificationAll(pageable).getContent();
             for(Book book:books){
                 BookBrief bookBrief = new BookBrief();
-                bookBrief.setId(book.getId());
-                bookBrief.setAuthor(book.getAuthor());
                 bookBrief.setTitle(book.getTitle());
                 bookBrief.setCover_url(book.getCover_url());
+                bookBrief.setId(book.getId());
+                bookBrief.setAuthor(book.getAuthor());
                 bookBrief.setClassification(book.getClassification());
                 bookBrief.setPrice(book.getPrice());
                 bookBriefs.add(bookBrief);
             }
-            List<Book> allBooks = bookService.findAllBooks();
             map.put("status", 200);
             map.put("message", "成功");
             Map<String, Object> newMap = new HashMap<>();
             newMap.put("books", bookBriefs);
             newMap.put("page", page);
             newMap.put("size", size);
-            newMap.put("totalPage", (int)Math.ceil(allBooks.size()*0.1*10/size));
-            newMap.put("total", allBooks.size());
+            newMap.put("totalPage", (int)Math.ceil(bookService.getNumber()*0.1*10/size));
+            newMap.put("total", bookService.getNumber());
             map.put("data", newMap);
             return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
         }catch (NullPointerException ex){}
@@ -70,7 +69,7 @@ public class BookController {
     }
 
     /**
-     * 获取Book简要信息列表
+     * 获取分类简要信息列表
      *
      * @param classification
      *
@@ -91,14 +90,13 @@ public class BookController {
                 BookBrief bookBrief = new BookBrief();
                 bookBrief.setId(book.getId());
                 bookBrief.setAuthor(book.getAuthor());
-                bookBrief.setTitle(book.getTitle());
-                bookBrief.setCover_url(book.getCover_url());
                 bookBrief.setClassification(book.getClassification());
                 bookBrief.setPrice(book.getPrice());
+                bookBrief.setTitle(book.getTitle());
+                bookBrief.setCover_url(book.getCover_url());
                 bookBriefs.add(bookBrief);
             }
             List<Book> noPageAllBooks = bookService.findNoPageAll(classification);
-            List<Book> allBooks = bookService.findAllBooks();
             map.put("status", 200);
             map.put("message", "成功");
             Map<String, Object> newMap = new HashMap<>();
@@ -106,7 +104,7 @@ public class BookController {
             newMap.put("size", size);
             newMap.put("totalPage", (int)Math.ceil(noPageAllBooks.size()*0.1*10/size));
             newMap.put("totalClassification", noPageAllBooks.size());
-            newMap.put("total", allBooks.size());
+            newMap.put("total", bookService.getNumber());
             newMap.put("books", bookBriefs);
             map.put("data", newMap);
             return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
@@ -162,21 +160,23 @@ public class BookController {
         map.put("message", "成功");
         List<BookBrief> books = new ArrayList<>();
         Random random = new Random();
-        try{
-            List<Book> allBooks = bookService.findAllBooks();
-            for(int i=0;i<20;i++){
-                int id = random.nextInt(allBooks.size())+1;
-                Book book = bookService.findOne(id);
-                BookBrief bookBrief = new BookBrief();
-                bookBrief.setClassification(book.getClassification());
-                bookBrief.setPrice(book.getPrice());
-                bookBrief.setCover_url(book.getCover_url());
-                bookBrief.setTitle(book.getTitle());
-                bookBrief.setAuthor(book.getAuthor());
-                bookBrief.setId(book.getId());
-                books.add(bookBrief);
+        ArrayList<Integer> bookID = new ArrayList<>();
+        while (bookID.size()<=20){
+            int id = random.nextInt(bookService.getNumber());
+            if(bookID.contains(id)){
+                continue;
             }
-        }catch (NullPointerException ex){}
+            bookID.add(id);
+            Book book = bookService.findOne(id);
+            BookBrief bookBrief = new BookBrief();
+            bookBrief.setClassification(book.getClassification());
+            bookBrief.setPrice(book.getPrice());
+            bookBrief.setCover_url(book.getCover_url());
+            bookBrief.setTitle(book.getTitle());
+            bookBrief.setAuthor(book.getAuthor());
+            bookBrief.setId(book.getId());
+            books.add(bookBrief);
+        }
         Map<String, Object> newMap = new HashMap<>();
         newMap.put("books", books);
         map.put("data", newMap);

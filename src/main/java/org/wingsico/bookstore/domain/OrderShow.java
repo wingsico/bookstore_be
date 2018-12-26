@@ -13,6 +13,8 @@ public class OrderShow {
 
     private int status;
 
+    private String username;
+
     private Timestamp date;
 
     public ArrayList<OrderCommodity> getOrderCommodities() {
@@ -53,5 +55,13 @@ public class OrderShow {
 
     public void setDate(Timestamp date) {
         this.date = date;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
