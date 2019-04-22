@@ -13,6 +13,5 @@ import java.util.List;
  */
 @Repository
 public interface CommodityRepo extends JpaRepository<Commodity, Integer> {
-    @Query
     List<Commodity> findAllByUserID(int userID);
 }

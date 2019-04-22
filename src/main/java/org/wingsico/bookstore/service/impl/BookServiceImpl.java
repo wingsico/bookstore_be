@@ -10,6 +10,7 @@ import org.wingsico.bookstore.domain.Book;
 import org.wingsico.bookstore.domain.repo.BookRepo;
 import org.wingsico.bookstore.service.BookService;
 
+import javax.annotation.Resource;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -56,7 +57,7 @@ public class BookServiceImpl implements BookService {
     public List<Book> findAllBooks(){ return bookRepo.findAll(); }
 
     @Override
-    public Book findOne(int id){ return bookRepo.getOne(id); }
+    public Book findOne(int id){ return bookRepo.findById(id); }
 
     @Override
     public List<Book> likeQuery(String content){

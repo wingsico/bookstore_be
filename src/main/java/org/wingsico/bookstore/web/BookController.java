@@ -9,10 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.wingsico.bookstore.domain.BookBrief;
 import org.wingsico.bookstore.domain.Classification;
-import org.wingsico.bookstore.service.BookService;
+import org.wingsico.bookstore.service.*;
 import org.wingsico.bookstore.domain.Book;
-import org.wingsico.bookstore.service.ClassificationService;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
@@ -28,6 +28,12 @@ public class BookController {
     BookService bookService;
     @Autowired
     ClassificationService classificationService;
+    @Resource
+    private RecommendService recommendService;
+    @Resource
+    private BusinessService businessService;
+    @Resource
+    private UserService userService;
 
     /**
      * 获取所有书籍简要信息列表
@@ -52,6 +58,11 @@ public class BookController {
                 bookBrief.setAuthor(book.getAuthor());
                 bookBrief.setClassification(book.getClassification());
                 bookBrief.setPrice(book.getPrice());
+                if (businessService.getBusiness(book.getId())==null){
+                    bookBrief.setBusiness("cura官方");
+                }else {
+                    bookBrief.setBusiness(userService.query(businessService.getBusiness(book.getId()).getUserId()).getUsername());
+                }
                 bookBriefs.add(bookBrief);
             }
             map.put("status", 200);
@@ -94,6 +105,11 @@ public class BookController {
                 bookBrief.setPrice(book.getPrice());
                 bookBrief.setTitle(book.getTitle());
                 bookBrief.setCover_url(book.getCover_url());
+                if (businessService.getBusiness(book.getId())==null){
+                    bookBrief.setBusiness("cura官方");
+                }else {
+                    bookBrief.setBusiness(userService.query(businessService.getBusiness(book.getId()).getUserId()).getUsername());
+                }
                 bookBriefs.add(bookBrief);
             }
             List<Book> noPageAllBooks = bookService.findNoPageAll(classification);
@@ -115,7 +131,6 @@ public class BookController {
     /**
      * 获取单本书的详细信息
      *
-     * @param id
      *
      */
     @PostMapping(value = "/detail")
@@ -124,8 +139,15 @@ public class BookController {
         map.put("status", 200);
         map.put("message", "成功");
         Book bookFind = bookService.findOne(book.getId());
+        String business;
+        if (businessService.getBusiness(book.getId())==null){
+            business = "cura官方";
+        }else {
+            business = userService.query(businessService.getBusiness(book.getId()).getUserId()).getUsername();
+        }
         Map<String, Object> newMap = new HashMap<>();
         newMap.put("book", bookFind);
+        newMap.put("business", business);
         map.put("data", newMap);
         return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
     }
@@ -150,24 +172,18 @@ public class BookController {
     }
 
     /**
-     * 随机获取20本书作为推荐
+     * 进行书籍推荐
      *
      */
-    @GetMapping(value = "recommend")
-    public ResponseEntity<Map<String,Object>> getRecommend(){
+    @GetMapping(value = "/recommend")
+    public ResponseEntity<Map<String,Object>> getRecommend(@RequestHeader("Authorization") int userID){
         Map<String, Object> map = new HashMap<>();
         map.put("status", 200);
         map.put("message", "成功");
         List<BookBrief> books = new ArrayList<>();
         Random random = new Random();
-        ArrayList<Integer> bookID = new ArrayList<>();
-        while (bookID.size()<=20){
-            int id = random.nextInt(bookService.getNumber());
-            if(bookID.contains(id)){
-                continue;
-            }
-            bookID.add(id);
-            Book book = bookService.findOne(id);
+        ArrayList<Book> bookAll = recommendService.getRecommend(userID);
+        for (Book book:bookAll){
             BookBrief bookBrief = new BookBrief();
             bookBrief.setClassification(book.getClassification());
             bookBrief.setPrice(book.getPrice());
@@ -186,7 +202,6 @@ public class BookController {
     /**
      * 根据输入内容进行模糊查询
      *
-     * @param content
      *
      */
     @PostMapping(value = "query")

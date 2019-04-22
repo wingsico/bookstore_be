@@ -7,6 +7,7 @@ public class BookBrief {
     private int classification;
     private String cover_url;
     private float price;
+    private String business;
 
     public int getId() {
         return id;
@@ -54,5 +55,13 @@ public class BookBrief {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public String getBusiness() {
+        return business;
+    }
+
+    public void setBusiness(String business) {
+        this.business = business;
     }
 }

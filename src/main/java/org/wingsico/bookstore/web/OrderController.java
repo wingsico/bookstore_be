@@ -4,12 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.wingsico.bookstore.common.JsonResult;
 import org.wingsico.bookstore.domain.*;
-import org.wingsico.bookstore.service.CommodityService;
-import org.wingsico.bookstore.service.OrderCommodityService;
-import org.wingsico.bookstore.service.OrderService;
-import org.wingsico.bookstore.service.UserService;
+import org.wingsico.bookstore.service.*;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +30,10 @@ public class OrderController {
     UserService userService;
     @Autowired
     OrderCommodityService orderCommodityService;
+    @Resource
+    private RecommendService recommendService;
+
+    JsonResult jsonResult = new JsonResult();
 
     /**
      * 获取用户的全部订单详情
@@ -202,12 +205,11 @@ public class OrderController {
      * 支付订单
      *
      * @param userID
-     * @param orderID
-     * @param payment
+     * @param payOrder
      *
      */
     @PostMapping(value = "/pay")
-    public ResponseEntity<Map<String,Object>> pay(@RequestHeader("Authorization") int userID, @RequestBody PayOrder payOrder){
+    public Object pay(@RequestHeader("Authorization") int userID, @RequestBody PayOrder payOrder){
         Map<String, Object> map = new HashMap<>();
         User user = userService.query(userID);
         try{
@@ -248,6 +250,7 @@ public class OrderController {
                 map.put("message", "成功");
             }
         }catch (NullPointerException ex){}
+        recommendService.recommend(userID);
         return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
     }
 }

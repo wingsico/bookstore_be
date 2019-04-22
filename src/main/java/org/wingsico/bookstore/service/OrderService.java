@@ -38,5 +38,20 @@ public interface OrderService {
      */
     void modifyStatus(int orderID, int status);
 
+    /**
+     * 根据userId获取订单
+     * @param userId
+     * @param status
+     * @return
+     */
+    List<Order> getUserOrders(int userId, int status);
+
+    /**
+     * 根据bookId获取订单
+     * @param bookId
+     * @return
+     */
+    List<Order> getOrderByBookId(int bookId, int status);
+
     Order query(int orderID);
 }

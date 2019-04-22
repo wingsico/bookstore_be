@@ -210,12 +210,10 @@ public class AdminController {
                     map.put("data", userMap);
                     return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
                 }
-                else {
-                    map.put("status", 400);
-                    map.put("message", "该用户不存在");
-                    return new ResponseEntity<Map<String,Object>>(map,HttpStatus.BAD_REQUEST);
-                }
             }
+            map.put("status", 400);
+            map.put("message", "该用户不存在");
+            return new ResponseEntity<Map<String,Object>>(map,HttpStatus.BAD_REQUEST);
         }catch (NullPointerException ex){}
         return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
     }

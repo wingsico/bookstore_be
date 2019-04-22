@@ -106,6 +106,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> getUserOrders(int userId, int status){
+        return orderRepo.findAllByUserIDAndStatus(userId, status);
+    }
+
+    @Override
+    public List<Order> getOrderByBookId(int bookId, int status){
+        return orderRepo.findAllByBookIDAndStatus(bookId, status);
+    }
+
+    @Override
     public Order query(int orderID){
         Order order = new Order();
         try {
